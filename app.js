@@ -60,13 +60,6 @@ app.get("/tasks", function(req, resp) {
 	});
 });
 
-app.get("/tasks/new", function(req, resp) {
-	resp.render("tasks/new.jade", {
-		title: "New Task",
-		layout: "twitter.jade"
-	});
-});
-
 app.post("/tasks", function(req, resp){
 	var task = new Task(req.body.task);
 	
@@ -78,6 +71,45 @@ app.post("/tasks", function(req, resp){
 		}
 	});
 });
+
+app.put("/tasks/:id", function(req, resp){
+	Task.findById(req.params.id, function(err, doc){
+		if(err){
+			resp.redirect("/tasks");
+		}else{
+			doc.task = req.body.task.task;
+			doc.save(function(err){
+				if(err){
+					throw err;
+				}else{
+					resp.redirect("/tasks");
+				}
+			});
+		}
+	});
+});
+
+app.get("/tasks/new", function(req, resp) {
+	resp.render("tasks/new.jade", {
+		title: "New Task",
+		layout: "twitter.jade"
+	});
+});
+
+app.get("/tasks/:id/edit", function(req, resp){
+	Task.findById(req.params.id, function(err, doc){
+		if(err){
+			resp.redirect("/tasks/new");
+		}else{
+			resp.render("tasks/edit.jade",{
+				title: "Edit Task",
+				task: doc,
+				layout: "twitter.jade"
+			});
+		}
+	});
+});
+
 
 app.listen(8080);
 console.log("Express server listening on port %d in %s mode",

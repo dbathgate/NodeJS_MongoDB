@@ -3,9 +3,12 @@ h1 Tasks
 	table
 		tr
 			th Task
+			th Action
 				each task in docs
 					tr
 						td #{task.task}
+						td 
+							a(href="/tasks/" + task.id + "/edit") Edit
 - else
 	p You have no tasks
 
