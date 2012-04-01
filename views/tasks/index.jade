@@ -1,5 +1,4 @@
 h1 Tasks
-a(href="/tasks/new", class="btn primary") Add a Task
 - if(docs.length)
 	table
 		tr
@@ -9,3 +8,5 @@ a(href="/tasks/new", class="btn primary") Add a Task
 						td #{task.task}
 - else
 	p You have no tasks
+
+a(href="/tasks/new", class="btn primary") Add a Task
