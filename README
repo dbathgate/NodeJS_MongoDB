@@ -1,0 +1,6 @@
+Setup
+* mpm install
+
+Running
+* node app.js
+* URL: http://localhost:8080
