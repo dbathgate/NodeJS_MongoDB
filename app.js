@@ -2,7 +2,9 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes');
+var express = require('express')
+	, routes = require('./routes')
+	, mongoose = require("mongoose");
 
 var app = module.exports = express.createServer();
 
@@ -28,11 +30,7 @@ app.configure('production', function() {
 	app.use(express.errorHandler());
 });
 
-// Routes
-
-app.get('/', routes.index);
-
-var mongoose = require("mongoose");
+//Init mongo db
 
 mongoose.connect("mongodb://localhost/node", function(err) {
 	if (err) {
@@ -49,6 +47,11 @@ var Task = new Schema({
 });
 
 var Task = mongoose.model("Task", Task);
+
+// Routes
+app.get('/', function(req, resp){
+	resp.redirect("/tasks");
+});
 
 app.get("/tasks", function(req, resp) {
 	Task.find({}, function(err, docs) {
