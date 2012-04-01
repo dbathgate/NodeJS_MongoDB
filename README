@@ -1,5 +1,5 @@
 Setup
-* mpm install
+* npm install
 
 Running
 * node app.js
