@@ -3,116 +3,115 @@
  */
 
 var express = require('express')
-	, routes = require('./routes')
-	, mongoose = require("mongoose");
+  , routes = require('./routes')
+  , mongoose = require("mongoose");
 
 var app = module.exports = express.createServer();
 
 // Configuration
 
 app.configure(function() {
-	app.set('views', __dirname + '/views');
-	app.set('view engine', 'jade');
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(app.router);
-	app.use(express.static(__dirname + '/public'));
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
 });
 
 app.configure('development', function() {
-	app.use(express.errorHandler({
-	  dumpExceptions : true,
-	  showStack : true
-	}));
+  app.use(express.errorHandler({
+    dumpExceptions : true,
+    showStack : true
+  }));
 });
 
 app.configure('production', function() {
-	app.use(express.errorHandler());
+  app.use(express.errorHandler());
 });
 
-//Init mongo db
+// Init mongo db
 
 mongoose.connect("mongodb://localhost/node", function(err) {
-	if (err) {
-		throw err;
-	} else {
-		console.log("Connected to MongoDB");
-	}
+  if (err) {
+    throw err;
+  } else {
+    console.log("Connected to MongoDB");
+  }
 });
 
 var Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
 
 var Task = new Schema({
-	task : String
+  task : String
 });
 
 var Task = mongoose.model("Task", Task);
 
 // Routes
-app.get('/', function(req, resp){
-	resp.redirect("/tasks");
+app.get('/', function(req, resp) {
+  resp.redirect("/tasks");
 });
 
 app.get("/tasks", function(req, resp) {
-	Task.find({}, function(err, docs) {
-		resp.render("tasks/index", {
-		  title : "Tasks",
-		  layout : "twitter.jade",
-		  docs : docs
-		});
-	});
+  Task.find({}, function(err, docs) {
+    resp.render("tasks/index", {
+      title : "Tasks",
+      layout : "twitter.jade",
+      docs : docs
+    });
+  });
 });
 
-app.post("/tasks", function(req, resp){
-	var task = new Task(req.body.task);
-	
-	task.save(function(err){
-		if(err){
-			resp.redirect("/tasks/new");
-		}else{
-			resp.redirect("/tasks");
-		}
-	});
+app.post("/tasks", function(req, resp) {
+  var task = new Task(req.body.task);
+
+  task.save(function(err) {
+    if (err) {
+      resp.redirect("/tasks/new");
+    } else {
+      resp.redirect("/tasks");
+    }
+  });
 });
 
-app.put("/tasks/:id", function(req, resp){
-	Task.findById(req.params.id, function(err, doc){
-		if(err){
-			resp.redirect("/tasks");
-		}else{
-			doc.task = req.body.task.task;
-			doc.save(function(err){
-				if(err){
-					throw err;
-				}else{
-					resp.redirect("/tasks");
-				}
-			});
-		}
-	});
+app.put("/tasks/:id", function(req, resp) {
+  Task.findById(req.params.id, function(err, doc) {
+    if (err) {
+      resp.redirect("/tasks");
+    } else {
+      doc.task = req.body.task.task;
+      doc.save(function(err) {
+        if (err) {
+          throw err;
+        } else {
+          resp.redirect("/tasks");
+        }
+      });
+    }
+  });
 });
 
 app.get("/tasks/new", function(req, resp) {
-	resp.render("tasks/new.jade", {
-		title: "New Task",
-		layout: "twitter.jade"
-	});
+  resp.render("tasks/new.jade", {
+    title : "New Task",
+    layout : "twitter.jade"
+  });
 });
 
-app.get("/tasks/:id/edit", function(req, resp){
-	Task.findById(req.params.id, function(err, doc){
-		if(err){
-			resp.redirect("/tasks/new");
-		}else{
-			resp.render("tasks/edit.jade",{
-				title: "Edit Task",
-				task: doc,
-				layout: "twitter.jade"
-			});
-		}
-	});
+app.get("/tasks/:id/edit", function(req, resp) {
+  Task.findById(req.params.id, function(err, doc) {
+    if (err) {
+      resp.redirect("/tasks/new");
+    } else {
+      resp.render("tasks/edit.jade", {
+        title : "Edit Task",
+        task : doc,
+        layout : "twitter.jade"
+      });
+    }
+  });
 });
-
 
 app.listen(8080);
 console.log("Express server listening on port %d in %s mode",
