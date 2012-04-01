@@ -92,6 +92,18 @@ app.put("/tasks/:id", function(req, resp) {
   });
 });
 
+app.del("/tasks/:id", function(req, resp){
+  Task.findById(req.params.id, function(err, doc){
+    if(doc){
+      doc.remove(function(err){
+        resp.redirect("/tasks");
+      });
+    }else{
+      return next(new NotFound("Document not found"));
+    }
+  });
+});
+
 app.get("/tasks/new", function(req, resp) {
   resp.render("tasks/new.jade", {
     title : "New Task",

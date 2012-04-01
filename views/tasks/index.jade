@@ -7,8 +7,11 @@ h1 Tasks
 				each task in docs
 					tr
 						td #{task.task}
-						td 
-							a(href="/tasks/" + task.id + "/edit") Edit
+						td
+							a(href="/tasks/" + task.id + "/edit", class="btn pull-left") Edit
+							form(action="/tasks/" + task.id, method="post") 
+								input(name="_method", value="DELETE", type="hidden")
+								button(type="submit", class="btn pull-left") Delete
 - else
 	p You have no tasks
 
