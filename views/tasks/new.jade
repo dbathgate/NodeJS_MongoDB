@@ -1,0 +1,11 @@
+h1 New Task
+form(action="/tasks", method="post")
+	fieldset
+		legend Add a Task
+		div.clearfix
+			label Task
+			div.input
+				input(name="task[task]", class="xlarge")
+		div.actions
+			input(type="submit", value="Add Task", class="btn primary")
+			input(type="reset", class="btn") Cancel

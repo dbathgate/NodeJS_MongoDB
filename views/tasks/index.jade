@@ -1,0 +1,11 @@
+h1 Tasks
+a(href="/tasks/new", class="btn primary") Add a Task
+- if(docs.length)
+	table
+		tr
+			th Task
+				each task in docs
+					tr
+						td #{task.task}
+- else
+	p You have no tasks
